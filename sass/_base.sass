@@ -1,0 +1,52 @@
+\:root
+    --ff: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"    
+    --root_bgc: #13161d
+    --root_color: #d7d9dd
+    
+*
+    box-sizing: border-box
+    +scrollbar()
+    &::before,
+    &::after
+        box-sizing: border-box
+svg
+    fill: currentColor
+
+body
+    background-color: var(--root_bgc)
+    color: var(--root_color)
+    margin: 0
+    font-size: 16px
+    font-family: var(--ff)
+    letter-spacing: 0.024em
+
+.page-wrap
+    min-height: 100vh
+    display: grid
+    grid-template-columns: 100%
+    grid-template-rows: auto 1fr auto 
+    align-content: start
+    > *:not(.main)
+        padding: 8px 15px
+
+.main
+    border-top: 1px solid var(--root_color)
+    border-bottom: 1px solid var(--root_color)
+    &__inner
+        height: 100%
+        display: grid
+        grid-template-columns: 100%
+        justify-items: center
+        grid-gap: 30px
+        align-content: start
+        padding: 80px 15px 20px
+    &__row
+        display: flex
+        gap: 20px
+.header,
+.footer
+    text-align: center
+
+h1
+    font-size: 24px
+    margin: 2px 0 8px

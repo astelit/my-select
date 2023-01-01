@@ -1,0 +1,146 @@
+.my-select
+    --height: 46px
+    --bgc: #2b3242
+    --fz: 16px
+    --color: var(--root_color)
+    --bdw: 1px
+    --bdc: var(--root_color)
+    --bdrs: 5px
+    --zi: 12   
+
+    --input_icn_w: 36px 
+
+    --text_pd: 5px 0 5px 10px
+
+    --icn_w: 100%
+    --icn_h: 100%
+    
+    --dropdown_maxh: 191px
+    --dropdown_shadow: 2px 3px 3px rgba(10,11,12, .8)
+    --dropdown_pd: 5px 10px
+
+    --item_minh: 38px
+
+    max-width: 100%
+    min-width: 215px
+    font-size: var(--fz)
+    position: relative
+    z-index: var(--zi)
+    align-self: start
+    &__backdrop
+        background-color: transparent
+        position: fixed
+        inset: 0
+        z-index: -1        
+    &:not(.is_open) &__backdrop
+        display: none
+
+    &__input
+        border: var(--bdw) solid var(--bdc)
+        height: var(--height)
+        background-color: var(--bgc)
+        border-radius: var(--bdrs)
+        
+        line-height: 1
+        cursor: pointer
+        display: grid
+        grid-template-columns: 1fr var(--input_icn_w)    
+        grid-gap: 12px
+        transition: background-color 150ms ease-in
+        &:hover            
+            background-color: var(--root_bgc)
+        > *
+            pointer-events: none
+
+    &__text,
+    &__icn
+        display: flex
+        align-items: center
+
+    &__text
+        border-radius: var(--bdrs) 0 0 var(--bdrs)
+        padding: var(--text_pd)
+
+    &__icn
+        border-radius: 0 var(--bdrs) var(--bdrs) 0
+        border-left: var(--bdw) solid var(--bdc)
+        width: var(--icn_w)
+        height: var(--icn_h)
+        justify-content: center
+        color: var(--color)
+        > *
+            transition: transform 150ms ease-in
+
+    &.is_open &__icn > *        
+        transform: scale(1, -1)
+
+    &__dropdown        
+        +scrollOnRails(4px, 6px, var(--color))
+        position: absolute
+        top: calc(100% + 4px)
+        left: 0
+        width: calc(100% + 8px)
+        transition: transform 250ms, opacity 300ms 
+        opacity: 0
+        transform: translateY(12px)
+        &::before,
+        &::after
+            content: ''
+            width: calc(100% - 8px)
+            height: 5px
+            border: var(--bdw) solid var(--bdc)
+            position: absolute
+            left: 0
+        &::before 
+            top: 0 
+            border-bottom: none
+            border-radius: var(--bdrs) var(--bdrs) 0 0
+            box-shadow: 0px -4px 0 3px var(--root_bgc)
+        &::after 
+            bottom: 0
+            border-top: none
+            border-radius: 0 0 var(--bdrs) var(--bdrs)
+            box-shadow: 0px 4px 0 3px var(--root_bgc)     
+        
+    &:not(.is_open) &__dropdown
+        pointer-events: none
+
+    &.is_open &__dropdown
+        opacity: 1
+        transform: translateY(0)
+        transition: opacity 250ms, transform 300ms
+
+    &__inner
+        +scroll(gutter)
+        overflow: hidden auto
+        max-height: var(--dropdown_maxh)
+        
+    &__list
+        overflow: hidden
+        margin: 0
+        padding-left: 0
+        list-style-type: none
+        background-color: var(--bgc)
+        border: var(--bdw) solid var(--bdc)
+        border-radius: var(--bdrs)        
+        box-shadow: var(--dropdown_shadow)
+
+        
+    &__item
+        line-height: 1
+        min-height: var(--item_minh)
+        padding: var(--dropdown_pd)        
+        display: flex
+        align-items: center
+        cursor: pointer
+        > *
+            pointer-events: none
+        &:not(:last-child)
+            border-bottom: var(--bdw) solid var(--bdc)
+            
+        &:hover
+            background-color: var(--root_bgc)
+            transition: background-color 150ms ease-in
+        &.is_selected
+            background-color: #785eab
+            

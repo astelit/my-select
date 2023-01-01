@@ -1,0 +1,143 @@
+@use "sass:list"
+@use "sass:math"
+
+// scrollbar
+// https://css-tricks.com/the-current-state-of-styling-scrollbars/
+// =============================================================================
+
+// common
+=scrollbar($args...) // thin
+	overscroll-behavior: var(--overscroll_behavior, contain)                    // auto || contain/none
+	scrollbar-color: var(--scrollbar_thumb_color, #a8a8a8) var(--scrollbar_track_color, #f1f1f1)
+	scrollbar-width: var(--scrollbar_firefox_width, auto)
+	@each $select in $args
+		@if $select == 'thin'
+			--scrollbar_firefox_width: thin
+	&::-webkit-scrollbar
+		width: var(--scrollbar_width, 8px)
+		height: var(--scrollbar_height, 8px)
+	&::-webkit-scrollbar-thumb
+		background-color: var(--scrollbar_thumb_color, #a8a8a8)
+		border-radius: var(--scrollbar_thumb_bdrs, 0)
+	&::-webkit-scrollbar-track
+		background-color: var(--scrollbar_track_color, #f1f1f1)
+		border-radius: var(--scrollbar_track_bdrs)
+	&::-webkit-scrollbar-corner
+		// нижний угол полосы прокрутки, где пересекаются горизонтальная и вертикальная полосы прокрутки.
+		background-color: var(--scrollbar_corner_color, var(--scrollbar_track_color))
+
+
+=scroll($args...) // gutter, offset, snap, smooth, thumb-border, track-piece, arrow
+	@each $select in $args
+		@if $select == 'gutter'
+			scrollbar-gutter: var(--scrollbar_gutter, stable) // auto || stable/both-edges and
+		@if $select == 'offset'
+			scroll-padding-top: var(--scroll_padding_top, 0)
+			scroll-padding-right: var(--scroll_padding_right, 0)
+			scroll-padding-bottom: var(--scroll_padding_bottom, 0)
+			scroll-padding-left: var(--scroll_padding_left, 0)
+		@if $select == 'snap'
+			scroll-snap-type: var(--scrollbar_snap-type, block proximity) // none || x || y || block || inline || both && mandatory || proximity  / property...
+			> *
+				scroll-snap-align: var(--scrollbar_snap-align, start) // none || start || end || center / property...
+		@if $select == 'smooth'
+			@media (prefers-reduced-motion: no-preference)
+				scroll-behavior: var(--scrollbar_behavior, smooth)
+		@if $select == 'smooth_f'
+			scroll-behavior: var(--scrollbar_behavior, smooth)
+		@if $select == 'thumb-border'
+			&::-webkit-scrollbar-thumb
+				background-clip: content-box
+				border-top-width: var(--scrollbar_thumb_bdtw, 0)
+				border-right-width: var(--scrollbar_thumb_bdrw, 0)
+				border-bottom-width: var(--scrollbar_thumb_bdw, 0)
+				border-left-width: var(--scrollbar_thumb_bdlw, 0)
+				border-style: solid
+				border-top-color: var(--scrollbar_thumb_bdw, transparent)
+				border-right-color: var(--scrollbar_thumb_bdw, transparent)
+				border-bottom-color: var(--scrollbar_thumb_bdw, transparent)
+				border-left-color: var(--scrollbar_thumb_bdw, transparent)
+	
+		@if $select == 'track-piece'
+			&::-webkit-scrollbar-track-piece
+				// видимая часть трека
+				border-radius: var(--scrollbar_track-piece_bdrs)
+				&:start
+					background-color: var(--scrollbar_track-start_color)
+				&:end
+					background-color: var(--scrollbar_track-end_color)
+		@if $select == 'arrow'
+			&::-webkit-scrollbar-button
+				// кнопки направления на полосе прокрутки
+				&:single-button
+					background-color: var(--scrollbar_btns_bgc)
+					&:vertical
+						&:decrement // &:hover // &:active
+							height: var(--scrollbar_btn_top_size, 0)
+						&:increment
+							height: var(--scrollbar_btn_bot_size, 0)
+					&:horizontal
+						&:decrement
+							width: var(--scrollbar_btn_left_size, 0)
+						&:increment
+							width: var(--scrollbar_btn_right_size, 0)
+		
+			
+		@if $select == 'resizer'
+			&::-webkit-resizer
+				// ??? перетаскиваемый маркер изменения размера, который появляется в нижнем углу некоторых элементов.
+				background-color: var(--scrollbar_resizer_color)
+	
+	
+=scrollOnRails($width: 4px, $offset: 4px, $thumbColor, $trackColor: #f1f1f1, $trackColorLeft: rgba(255,255,255, 0), $trackColorRight: rgba(255,255,255, 0))
+
+	--scrollbar_track-width: #{$width}
+	--scrollbar_offset: #{$offset}
+	--scrollbar_thumb_color: #{$thumbColor}
+	--scrollbar_track-color_center: #{$trackColor}
+	--scrollbar_track-color_left: #{$trackColorLeft}
+	--scrollbar_track-color_right: #{$trackColorRight}
+	
+	margin-top: var(--scrollbar_offset)
+	margin-bottom: var(--scrollbar_offset)
+
+	> *
+		scrollbar-color: var(--scrollbar_thumb_color, #a8a8a8) var(--scrollbar_track_color, #f1f1f1)
+		scrollbar-width: thin
+		
+		&::-webkit-scrollbar-track
+			background: linear-gradient(to right, var(--scrollbar_track-color_left) 0%, var(--scrollbar_track-color_left) 30%, var(--scrollbar_track-color_center) 58%, var(--scrollbar_track-color_right) 61%, var(--scrollbar_track-color_right) 100%)
+		&::-webkit-scrollbar
+			width: var(--scrollbar_track-width)
+		&::-webkit-scrollbar-thumb
+			background-color: var(--scrollbar_thumb_color, #a8a8a8)
+			border-radius: var(--scrollbar_track-width)
+			
+	@supports (scrollbar-width: thin)
+		margin-right: calc(var(--scrollbar_offset) - var(--scrollbar_track-width) / 2)
+		> *
+			padding-right: calc(var(--scrollbar_offset) + var(--scrollbar_track-width) / 2)
+		
+	@supports not (scrollbar-width: thin)
+		margin-right: calc(var(--scrollbar_offset)  - var(--scrollbar_track-width) / 2)
+		> *
+			padding-right: calc(var(--scrollbar_offset) - var(--scrollbar_track-width) / 2)
+
+
+// pseudo-elements
+// =============================================================================
+
+// выделение контента
+=sel($bgc: #000, $color: #fff)
+	&::selection
+		background-color: $bgc
+		color: $color
+		@content
+
+
+// placeholder form
+=plc($color: currentColor)
+	&::placeholder
+		color: $color
+		@content
+
